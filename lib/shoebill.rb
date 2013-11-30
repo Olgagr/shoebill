@@ -1,4 +1,6 @@
-require "shoebill/version"
+require 'shoebill/version'
+require 'shoebill/routing'
+require 'shoebill/controller'
 
 module Shoebill
 
