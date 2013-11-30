@@ -5,8 +5,11 @@ module Shoebill
   class Application
 
     def call(env)
-      STDERR.puts env
-      [200, { 'Content-Type' => 'text/html' }, ['Hello World from Shoebill']]
+      klass, action = get_controller_and_action(env)
+      controller = klass.new(env)
+      text = controller.send(action)
+
+      [200, { 'Content-Type' => 'text/html' }, [text]]
     end
 
   end
