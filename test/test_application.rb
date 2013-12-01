@@ -26,6 +26,6 @@ class ShoebillAppTest < Test::Unit::TestCase
 
   def test_routing
     env = { 'PATH_INFO' => '/test/show' }
-    assert app.get_controller_and_action(env) == [TestController, 'show']
+    assert_equal app.get_controller_and_action(env), [TestController, 'show']
   end
 end
