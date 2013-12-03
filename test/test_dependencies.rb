@@ -2,8 +2,9 @@ require_relative 'test_helper'
 
 class ShoebillDependeciesTest < Test::Unit::TestCase
 
-  def const_missing_test
-    obj = Object.const_missing('TestController')
+  def test_const_missing
+    Kernel.expects(:require).with('test_me').returns(File.new(File.join(File.dirname(__FILE__), 'files', 'test_me.rb')))
+    obj = Object.const_missing('TestMe')
     assert_kind_of TestController, obj
   end
 
