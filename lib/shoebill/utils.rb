@@ -10,6 +10,10 @@ module Shoebill
       downcase
     end
 
+    def self.get_controller_name(name)
+      name.to_s.match(/^(.+)Controller/).captures[0].downcase
+    end
+
   end
 
 end
