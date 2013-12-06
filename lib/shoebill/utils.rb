@@ -11,7 +11,8 @@ module Shoebill
     end
 
     def self.get_controller_name(name)
-      name.to_s.match(/^(.+)Controller/).captures[0].downcase
+      klass = name.to_s.match(/^(.+)Controller/).captures[0]
+      to_underscore klass
     end
 
   end
