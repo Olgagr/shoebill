@@ -3,6 +3,7 @@ require 'shoebill/utils'
 require 'shoebill/routing'
 require 'shoebill/controller'
 require 'shoebill/dependencies'
+require 'shoebill/file_model'
 
 module Shoebill
 
