@@ -1,8 +1,11 @@
 require 'erubis'
+require 'shoebill/file_model'
 
 module Shoebill
 
   class Controller
+
+    include Shoebill::Model
 
     attr_reader :env
 
