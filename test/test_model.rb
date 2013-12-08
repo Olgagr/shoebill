@@ -36,4 +36,10 @@ class ShoebillTestModel < Test::Unit::TestCase
     assert_equal TestModel.find(2), nil
   end
 
+  def test_find_all
+    Dir.expects(:entries).returns(%w{'1.json' '2.json'})
+    all = TestModel.find_all
+    assert_equal all.size, 2
+  end
+
 end
