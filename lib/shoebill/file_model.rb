@@ -35,6 +35,23 @@ module Shoebill
         end
       end
 
+      def self.create(attrs)
+        hash = {}
+        hash['submitter'] = attrs.fetch(:submitter) { '' }
+        hash['link'] = attrs.fetch(:link) { '' }
+        hash['description'] = attrs.fetch(:description) { '' }
+
+        files = Dir['db/links/*.json']
+        highest = files.map { |file| file.split('/')[-1] }.map { |name| name[0...-5].to_i }.max
+        id = highest + 1
+
+        File.open("db/links/#{id}.json", 'w') do |f|
+          f.write(MultiJson.dump(hash))
+        end
+
+        FileModel.new("db/links/#{id}.json")
+      end
+
     end
 
   end
