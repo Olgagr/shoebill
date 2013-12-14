@@ -52,6 +52,19 @@ module Shoebill
         FileModel.new("db/links/#{id}.json")
       end
 
+      def self.method_missing(m, *args, &block)
+        if m.to_s.match(/^find_all_by_.*/)
+          attribute = m.to_s.match(/^find_all_by_(.*)/).captures[0]
+          STDERR.puts Dir['db/links/*.*']
+          files = Dir['db/links/*'].select do |file|
+            content = File.read(file)
+            hash = MultiJson.load(content)
+            hash[attribute] == args[0]
+          end
+          files.map { |f| FileModel.new(f) }
+        end
+      end
+
     end
 
   end
