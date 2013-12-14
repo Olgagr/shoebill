@@ -46,6 +46,19 @@ Your own class controller should inherit from Shoebill::Controller.
     class MyController < Shoebill::Controller
     end
 
+All instance variables, set in the controller, are available in the view templates. For example:
+
+    class MyController < Shoebill::Controller
+
+        def show
+          @item = MyModel.find(param['id'])
+        end
+
+    end
+
+    # in .html.erb template you can use @item variable
+
+    <%= @item %>
 
 
 ## Contributing
