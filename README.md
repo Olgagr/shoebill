@@ -61,6 +61,12 @@ All instance variables, set in the controller, are available in the view templat
     <%= @item %>
 
 
+## Documentation
+
+To generate detailed documentation, make in the console:
+
+    rdoc
+
 ## Contributing
 
 1. Fork it
