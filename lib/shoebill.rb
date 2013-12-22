@@ -2,6 +2,7 @@ require 'shoebill/version'
 require 'shoebill/utils'
 require 'shoebill/routing'
 require 'shoebill/file_model'
+require 'shoebill/sql_model'
 require 'shoebill/controller'
 require 'shoebill/dependencies'
 
