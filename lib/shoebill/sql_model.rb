@@ -8,13 +8,14 @@ module Shoebill
   # Namespace for module.
   module Model
 
-    # Man class for SQLite model.
+    # Main class for SQLite model.
     class SQLite
 
       def initialize(data = nil)
         @hash = data
       end
 
+      # Parses given values to string. If value is neither Numeric nor String, it raises an exception.
       def self.to_sql(val)
         case val
           when Numeric
@@ -26,6 +27,9 @@ module Shoebill
         end
       end
 
+      # Creates new record from hash of values.
+      # * *Returns* :
+      #   - new Shoebill::Model::SQLite object
       def self.create(values)
         values.delete 'id'
         keys = schema.keys - ['id']
@@ -44,6 +48,7 @@ SQL
         self.new data
       end
 
+      # Returns the number of rows in table.
       def self.count
         DB.execute(<<SQL)[0][0]
 SELECT COUNT(*) FROM #{table};
