@@ -11,6 +11,8 @@ module Shoebill
     # Main class for SQLite model.
     class SQLite
 
+      attr_accessor :hash
+
       def initialize(data = nil)
         @hash = data
       end
@@ -54,6 +56,19 @@ SQL
 SELECT COUNT(*) FROM #{table};
 SQL
       end
+
+      # Find row by id.
+      # * *Returns* :
+      #   - new Shoebill::Model::SQLite object with given id
+      def self.find(id)
+        keys = schema.keys
+        sql = "SELECT * FROM #{table} WHERE id = #{id};"
+        vals = DB.execute(sql)[0]
+        data = Hash[keys.zip vals]
+        self.new data
+      end
+
+
 
       # Returns class underscore name.
       # === Example

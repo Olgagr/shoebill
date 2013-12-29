@@ -25,7 +25,6 @@ SQL
     @conn.execute <<SQL
 DROP TABLE test_model_sql;
 SQL
-    File.delete('development.db')
   end
 
   def test_table
@@ -59,6 +58,11 @@ SQL
 
   def test_to_sql_raising_error
    assert_raise(RuntimeError) { TestModelSQL.to_sql Object.new }
+  end
+
+  def test_find
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    assert_equal TestModelSQL.find(1).hash['id'], 1
   end
 
 end
