@@ -42,10 +42,8 @@ SQL
   end
 
   def test_create
-    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
-    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
-
-    assert_equal TestModelSQL.count, 2
+    test_model = TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    assert_equal test_model.hash['submitter'], 'Olga'
   end
 
   def test_to_sql_numeric
@@ -53,16 +51,22 @@ SQL
   end
 
   def test_to_sql_string
-    assert_equal TestModelSQL.to_sql('test'), 'test'
+    assert_equal TestModelSQL.to_sql('test'), "'test'"
   end
 
   def test_to_sql_raising_error
-   assert_raise(RuntimeError) { TestModelSQL.to_sql Object.new }
+  assert_raise(RuntimeError) { TestModelSQL.to_sql Object.new }
   end
 
   def test_find
     TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
     assert_equal TestModelSQL.find(1).hash['id'], 1
+  end
+
+  def test_find_by_attribute
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    model = TestModelSQL.find_by_submitter('Olga')
+    assert_equal model['submitter'], 'Olga'
   end
 
 end

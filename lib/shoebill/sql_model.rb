@@ -23,7 +23,7 @@ module Shoebill
           when Numeric
             val.to_s
           when String
-            "#{val}"
+            "'#{val}'"
           else
             raise "Can't change #{val.class} to SQL"
         end
@@ -36,12 +36,12 @@ module Shoebill
         values.delete 'id'
         keys = schema.keys - ['id']
         vals = keys.map do |key|
-          values[key] ? to_sql(values[key]) : 'null'
+          values[key.to_sym] ? values[key.to_sym] : 'null'
         end
 
         DB.execute <<SQL
 INSERT INTO #{table} (#{keys.join(',')})
-VALUES (#{vals.join(',')});
+VALUES (#{vals.map {|val| to_sql val}.join(',')});
 SQL
 
         data = Hash[keys.zip vals]
@@ -57,18 +57,27 @@ SELECT COUNT(*) FROM #{table};
 SQL
       end
 
-      # Find row by id.
+      # Finds row by id.
       # * *Returns* :
       #   - new Shoebill::Model::SQLite object with given id
       def self.find(id)
         keys = schema.keys
         sql = "SELECT * FROM #{table} WHERE id = #{id};"
         vals = DB.execute(sql)[0]
-        data = Hash[keys.zip vals]
-        self.new data
+        self.new Hash[keys.zip vals]
       end
 
+      # Returns requested attribute value for model
+      def [](key)
+        @hash[key.to_s]
+      end
 
+      def self.method_missing(m, *args, &block)
+        find_by_matches = /find_by_(.+)/.match m.to_s
+        if find_by_matches
+          find_by_attribute(find_by_matches.captures[0], args[0])
+        end
+      end
 
       # Returns class underscore name.
       # === Example
@@ -88,6 +97,15 @@ SQL
           @schema[row['name']] = row['type']
         end
         @schema
+      end
+
+      private
+
+      def self.find_by_attribute(attr, value)
+        keys = schema.keys
+        sql = "SELECT * FROM #{table} WHERE #{attr} = '#{value}'"
+        vals = DB.execute(sql)[0]
+        self.new Hash[keys.zip vals]
       end
 
     end
