@@ -76,6 +76,17 @@ SQL
         find_by_matches = /find_by_(.+)/.match m.to_s
         if find_by_matches
           find_by_attribute(find_by_matches.captures[0], args[0])
+        else
+          super
+        end
+      end
+
+      def self.respond_to?(m)
+        find_by_matches = /find_by_(.+)/.match m.to_s
+        if find_by_matches && schema.keys.include?(find_by_matches.captures[0])
+          true
+        else
+          super
         end
       end
 
@@ -105,7 +116,7 @@ SQL
         keys = schema.keys
         sql = "SELECT * FROM #{table} WHERE #{attr} = '#{value}'"
         vals = DB.execute(sql)[0]
-        self.new Hash[keys.zip vals]
+        vals.nil? ? [] : self.new(Hash[keys.zip vals])
       end
 
     end

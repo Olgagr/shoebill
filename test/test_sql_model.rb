@@ -69,4 +69,8 @@ SQL
     assert_equal model['submitter'], 'Olga'
   end
 
+  def test_respond_to
+    assert TestModelSQL.respond_to?(:find_by_submitter)
+  end
+
 end
