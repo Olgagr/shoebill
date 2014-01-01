@@ -69,8 +69,14 @@ SQL
     assert_equal model['submitter'], 'Olga'
   end
 
-  def test_respond_to
+  def test_self_respond_to
     assert TestModelSQL.respond_to?(:find_by_submitter)
+  end
+
+  def test_instance_method_missing
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    model = TestModelSQL.find_by_submitter('Olga')
+    assert_equal model.submitter, 'Olga'
   end
 
 end

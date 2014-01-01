@@ -72,6 +72,22 @@ SQL
         @hash[key.to_s]
       end
 
+      def method_missing(m, *args, &block)
+        if self.class.schema.keys.include?(m.to_s)
+          @hash[m.to_s]
+        else
+          super
+        end
+      end
+
+      def respond_to?(m)
+        if self.class.schema.keys.include?(m.to_s)
+          true
+        else
+          super
+        end
+      end
+
       def self.method_missing(m, *args, &block)
         find_by_matches = /find_by_(.+)/.match m.to_s
         if find_by_matches
