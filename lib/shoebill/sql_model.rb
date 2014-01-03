@@ -72,16 +72,18 @@ SQL
         @hash[key.to_s]
       end
 
-      # Allows to get attribute value in Rails way.
+      # Allows to get and set attribute on model in Rails way.
       # === Example
       #   class Post < SQLite
       #   end
       #
       #   post = Post.find 1
       #   post.title
+      #   post.title = 'Lorem ipsum'
       def method_missing(m, *args, &block)
-        if self.class.schema.keys.include?(m.to_s)
-          @hash[m.to_s]
+        method_name = m.to_s.gsub(/=$/, '')
+        if self.class.schema.keys.include?(method_name)
+          m.to_s.match(/=$/) ? @hash[method_name] = args[0] : @hash[method_name]
         else
           super
         end

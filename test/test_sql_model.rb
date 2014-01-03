@@ -73,10 +73,17 @@ SQL
     assert TestModelSQL.respond_to?(:find_by_submitter)
   end
 
-  def test_instance_method_missing
+  def test_instance_method_missing_getter
     TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
     model = TestModelSQL.find_by_submitter('Olga')
     assert_equal model.submitter, 'Olga'
+  end
+
+  def test_instance_method_missing_setter
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    model = TestModelSQL.find_by_submitter('Olga')
+    model.submitter = 'John'
+    assert_equal model.submitter, 'John'
   end
 
 end
