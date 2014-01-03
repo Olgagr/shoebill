@@ -67,11 +67,18 @@ SQL
         self.new Hash[keys.zip vals]
       end
 
-      # Returns requested attribute value for model
+      # Returns requested attribute value for model.
       def [](key)
         @hash[key.to_s]
       end
 
+      # Allows to get attribute value in Rails way.
+      # === Example
+      #   class Post < SQLite
+      #   end
+      #
+      #   post = Post.find 1
+      #   post.title
       def method_missing(m, *args, &block)
         if self.class.schema.keys.include?(m.to_s)
           @hash[m.to_s]
@@ -80,6 +87,7 @@ SQL
         end
       end
 
+      # Returns true if object responds to the given method.
       def respond_to?(m)
         if self.class.schema.keys.include?(m.to_s)
           true
@@ -88,6 +96,12 @@ SQL
         end
       end
 
+      # Allows to get model by attribute.
+      # === Example
+      #   class Post < SQLite
+      #   end
+      #
+      #   Post.find_by_title('Lorem ipsum')
       def self.method_missing(m, *args, &block)
         find_by_matches = /find_by_(.+)/.match m.to_s
         if find_by_matches
@@ -97,6 +111,7 @@ SQL
         end
       end
 
+      # Returns true if class responds to the given method.
       def self.respond_to?(m)
         find_by_matches = /find_by_(.+)/.match m.to_s
         if find_by_matches && schema.keys.include?(find_by_matches.captures[0])
