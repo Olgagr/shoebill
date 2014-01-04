@@ -63,12 +63,6 @@ SQL
     assert_equal TestModelSQL.find(1).hash['id'], 1
   end
 
-  def test_find_by_attribute
-    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
-    model = TestModelSQL.find_by_submitter('Olga')
-    assert_equal model['submitter'], 'Olga'
-  end
-
   def test_self_respond_to
     assert TestModelSQL.respond_to?(:find_by_submitter)
   end
@@ -84,6 +78,16 @@ SQL
     model = TestModelSQL.find_by_submitter('Olga')
     model.submitter = 'John'
     assert_equal model.submitter, 'John'
+  end
+
+  def test_save
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    model = TestModelSQL.find_by_submitter('Olga')
+    model.submitter = 'John'
+    model.save
+
+    model_changed = TestModelSQL.find_by_submitter('John')
+    assert_equal model.id, model_changed.id
   end
 
 end

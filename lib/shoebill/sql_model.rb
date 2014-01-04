@@ -138,6 +138,16 @@ SQL
         @schema
       end
 
+      # Saves model in database.
+      def save
+        values_to_set = @hash.each_with_object([]) { |(k, v), result| result << "#{k} = '#{v}'" }.join(',')
+        DB.execute <<SQL
+UPDATE #{self.class.table}
+SET #{values_to_set}
+WHERE id = #{@hash['id']}
+SQL
+      end
+
       private
 
       def self.find_by_attribute(attr, value)
