@@ -90,4 +90,13 @@ SQL
     assert_equal model.id, model_changed.id
   end
 
+  def test_destroy
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    assert_equal TestModelSQL.count, 1
+
+    model = TestModelSQL.find 1
+    model.destroy
+    assert_equal TestModelSQL.count, 0
+  end
+
 end

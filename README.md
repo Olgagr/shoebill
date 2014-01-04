@@ -46,6 +46,10 @@ Then you can use the following operations on the database:
     # count records in the table
     Post.count
 
+    # removes record from database
+    post = Post.find 1
+    post.destroy
+
 
 
 ### Controller

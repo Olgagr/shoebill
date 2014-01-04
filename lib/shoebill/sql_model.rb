@@ -148,6 +148,14 @@ WHERE id = #{@hash['id']}
 SQL
       end
 
+      # Removes model from database.
+      def destroy
+        DB.execute <<SQL
+DELETE FROM #{self.class.table}
+WHERE id = #{@hash['id']}
+SQL
+      end
+
       private
 
       def self.find_by_attribute(attr, value)
