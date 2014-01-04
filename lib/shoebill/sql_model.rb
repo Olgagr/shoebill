@@ -67,11 +67,6 @@ SQL
         self.new Hash[keys.zip vals]
       end
 
-      # Returns requested attribute value for model.
-      def [](key)
-        @hash[key.to_s]
-      end
-
       # Allows to get and set attribute on model in Rails way.
       # === Example
       #   class Post < SQLite
