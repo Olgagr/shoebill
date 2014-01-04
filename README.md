@@ -21,16 +21,32 @@ Or install it yourself as:
 
 ### Model
 
-Right now Shoebill uses really simple file-based, json format, read-only system to store your data.
-To use it, just put your json files in 'db/links' directory. The name of the file must be the id
-of the model, eg. 1.json. FileModel class is responsible to find single model or all models. You have
-two methods to your disposal in controller:
+Right now Shoebill uses SQLite database as default. It supports basics operations on database.
+To use them, create model class that inherits from Shoebill::Model::SQLite.
 
-    single_model = FileModel.find(id) # returns single model
+    class Post < Shoebill::Model::SQLite
+    end
 
-    all_models = FileModel.find_all # returns the array of models
+Then you can use the following operations on the database:
 
-FileModel is not very powerful and it will be changed in near future.
+    # create new model
+    Post.create { title: 'Lorem ipsum', content: 'Lorem lorem' }
+
+    # find model by id
+    Post.find 1
+
+    # find model by any attribute
+    Post.find_by_title 'Lorem ipsum'
+
+    # save model
+    post = Post.find 1
+    post.title = 'Some new title'
+    post.save
+
+    # count records in the table
+    Post.count
+
+
 
 ### Controller
 
