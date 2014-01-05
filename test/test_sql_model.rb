@@ -80,11 +80,11 @@ SQL
     assert_equal model.submitter, 'John'
   end
 
-  def test_save
+  def test_save!
     TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
     model = TestModelSQL.find_by_submitter('Olga')
     model.submitter = 'John'
-    model.save
+    model.save!
 
     model_changed = TestModelSQL.find_by_submitter('John')
     assert_equal model.id, model_changed.id

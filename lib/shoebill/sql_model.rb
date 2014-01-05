@@ -139,13 +139,24 @@ SQL
       end
 
       # Saves model in database.
-      def save
+      # Throw exception if there is an error
+      def save!
+        unless @hash['id']
+          self.class.create @hash
+          return true
+        end
         values_to_set = @hash.each_with_object([]) { |(k, v), result| result << "#{k} = '#{v}'" }.join(',')
         DB.execute <<SQL
 UPDATE #{self.class.table}
 SET #{values_to_set}
 WHERE id = #{@hash['id']}
 SQL
+      end
+
+      # Saves model in database.
+      # Returns false if there is an error.
+      def save
+        self.save! rescue false
       end
 
       # Removes model from database.
