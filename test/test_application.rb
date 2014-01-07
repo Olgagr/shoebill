@@ -18,12 +18,6 @@ class ShoebillAppTest < Test::Unit::TestCase
     TestApp.new
   end
 
-  def test_request
-    get '/test/show'
-    assert last_response.ok?
-    assert_equal 'This is a test response', last_response.body
-  end
-
   def test_routing
     env = { 'PATH_INFO' => '/test/show' }
     assert_equal app.get_controller_and_action(env), [TestController, 'show']

@@ -8,10 +8,27 @@ module Shoebill
 
     include Shoebill::Model
 
-    attr_reader :env, :request
+    attr_reader :env, :request, :routing_params
 
     def initialize(env)
       @env = env
+      @routing_params = {}
+    end
+
+    def dispatch(action, routing_params = {})
+      @routing_params = routing_params
+      self.send(action)
+
+      if get_response
+        st, hd, rs = get_response.to_a
+        [st, hd, [rs.body].flatten]
+      else
+        render(action)
+      end
+    end
+
+    def self.action(action, routing_params = {})
+      proc { |env| self.new(env).dispatch(action, routing_params) }
     end
 
     def get_response
@@ -27,7 +44,7 @@ module Shoebill
     end
 
     def params
-      request.params
+      request.params.merge routing_params
     end
 
     private
