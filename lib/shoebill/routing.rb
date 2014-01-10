@@ -5,12 +5,8 @@ class RouteObject
   end
 
   def match(url, *args)
-    options = {}
-    options = args.pop if args[-1].is_a? Hash
-    options[:default] ||= {}
-
-    dest = nil
-    dest = args.pop if args.size > 0
+    options = extract_options(args)
+    dest = extract_destination(args)
     raise 'Too many args' if args.size > 0
 
     parts = url.split('/')
@@ -70,6 +66,19 @@ class RouteObject
       return controller.action($2, routing_params)
     end
     raise "No destination: #{dest.inspect}"
+  end
+
+  private
+
+  def extract_options(*args)
+    options = {}
+    options = args.pop if args[-1].is_a? Hash
+    options[:default] ||= {}
+    options
+  end
+
+  def extract_destination(*args)
+    args.size > 0 ? args.pop : nil
   end
 
 end
