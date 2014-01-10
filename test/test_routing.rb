@@ -26,6 +26,10 @@ class ShoebillTestRouteObject < Test::Unit::TestCase
     assert_equal @route.send(:extract_destination), nil
   end
 
+  def test_extract_url_parts
+    assert_equal @route.send(:extract_url_parts, ':controller/:id/:action'), %w(:controller :id :action)
+  end
+
 
 
 end

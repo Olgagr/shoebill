@@ -9,8 +9,7 @@ class RouteObject
     dest = extract_destination(args)
     raise 'Too many args' if args.size > 0
 
-    parts = url.split('/')
-    parts.select! { |p| !p.empty? }
+    parts = extract_url_parts(url)
 
     vars = []
     regexp_parts = parts.map do |part|
@@ -79,6 +78,12 @@ class RouteObject
 
   def extract_destination(*args)
     args.size > 0 ? args.pop : nil
+  end
+
+  def extract_url_parts(url)
+    parts = url.split('/')
+    parts.select! { |p| !p.empty? }
+    parts
   end
 
 end
