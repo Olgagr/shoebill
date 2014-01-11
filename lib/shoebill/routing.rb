@@ -24,6 +24,7 @@ class RouteObject
                     dest: dest,
                     options: options
                 })
+    STDERR.puts @rules
   end
 
   def check_url(url)
@@ -42,7 +43,7 @@ class RouteObject
           return get_dest(r[:dest], params)
         else
           controller = params['controller']
-          action = params['action']
+          action = params['action'] || params[:action]
           return get_dest("#{controller}##{action}", params)
         end
       end
@@ -61,19 +62,6 @@ class RouteObject
   end
 
   private
-
-  def extract_options(*args)
-    options = {}
-    options = args.pop if args[-1].is_a? Hash
-    options[:default] ||= {}
-    options
-  end
-
-  def extract_destination(*args)
-    dest = args.size > 0 ? args[0] : nil
-    raise 'Too many args' if args.size > 0
-    dest
-  end
 
   def extract_url_parts(url)
     parts = url.split('/')
@@ -109,16 +97,6 @@ module Shoebill
     def get_rack_app(env)
       raise 'No routes!' unless @route_obj
       @route_obj.check_url env['PATH_INFO']
-    end
-
-    # Takes controller and action name from env variable.
-    # Returns array with controller object and action name.
-    def get_controller_and_action(env)
-      _, controller, action, the_rest = env['PATH_INFO'].split('/', 4)
-      controller = controller.capitalize
-      controller += 'Controller'
-
-      [Object.const_get(controller), action]
     end
 
   end
