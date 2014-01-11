@@ -30,6 +30,20 @@ class ShoebillTestRouteObject < Test::Unit::TestCase
     assert_equal @route.send(:extract_url_parts, ':controller/:id/:action'), %w(:controller :id :action)
   end
 
+  def test_combine_regexp
+    assert_equal @route.send(:combine_regexp, %w(:controller :id :action), []), %w(([a-zA-Z0-9]+) ([a-zA-Z0-9]+) ([a-zA-Z0-9]+))
+  end
+
+  def test_combine_regexp_splat
+    assert_equal @route.send(:combine_regexp, %w(:controller :show *), []), %w(([a-zA-Z0-9]+) ([a-zA-Z0-9]+) (.*))
+  end
+
+  def test_combine_regexp_returns_vars
+    vars = []
+    @route.send(:combine_regexp, %w(:controller :id :action), vars)
+    assert_equal vars, %w(controller id action)
+  end
+
 
 
 end

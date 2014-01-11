@@ -12,17 +12,7 @@ class RouteObject
     parts = extract_url_parts(url)
 
     vars = []
-    regexp_parts = parts.map do |part|
-      if part[0] == ':'
-        vars << part[1..-1]
-        '([a-zA-Z0-9]+)'
-      elsif part[0] == '*'
-        vars << part[1..-1]
-        '(.*)'
-      else
-        part
-      end
-    end
+    regexp_parts = combine_regexp(parts, vars)
 
     regexp = regexp_parts.join('/')
     @rules.push({
@@ -84,6 +74,20 @@ class RouteObject
     parts = url.split('/')
     parts.select! { |p| !p.empty? }
     parts
+  end
+
+  def combine_regexp(parts, vars)
+    parts.map do |part|
+      if part[0] == ':'
+        vars << part[1..-1]
+        '([a-zA-Z0-9]+)'
+      elsif part[0] == '*'
+        vars << part[1..-1]
+        '(.*)'
+      else
+        part
+      end
+    end
   end
 
 end
