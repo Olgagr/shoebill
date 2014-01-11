@@ -76,4 +76,18 @@ class ShoebillTestRouteObject < Test::Unit::TestCase
                          }]
   end
 
+  def test_match_rule_with_options_1
+    rules = @route.match ':controller', :default => [:action => 'index']
+    assert_equal rules, [{
+                             regexp: /^\/([a-zA-Z0-9]+)$/,
+                             vars: %w(controller),
+                             dest: nil,
+                             options: {
+                                 default: [:action => 'index']
+                             }
+                         }]
+  end
+
+
+
 end
