@@ -9,23 +9,6 @@ class ShoebillTestRouteObject < Test::Unit::TestCase
     @route = RouteObjectTest.new
   end
 
-  def test_extract_options_with_hash
-    assert_equal @route.send(:extract_options, {:default => [:action => 'show']}), { default: [action: 'show'] }
-  end
-
-  def test_extract_options_without_hash
-    assert_equal @route.send(:extract_options), { default: {} }
-  end
-
-  def test_extract_destination
-    p = proc { puts 'hello' }
-    assert_equal @route.send(:extract_destination, p), p
-  end
-
-  def test_extract_destination_no_args
-    assert_equal @route.send(:extract_destination), nil
-  end
-
   def test_extract_url_parts
     assert_equal @route.send(:extract_url_parts, ':controller/:id/:action'), %w(:controller :id :action)
   end
@@ -44,6 +27,41 @@ class ShoebillTestRouteObject < Test::Unit::TestCase
     assert_equal vars, %w(controller id action)
   end
 
+  def test_match_rule_with_hash
+    rules = @route.match '', 'quotes#index'
+    assert_equal rules, [{
+                             regexp: /^\/$/,
+                             vars: [],
+                             dest: 'quotes#index',
+                             options: {
+                                 default: {}
+                             }
+                         }]
+  end
 
+  def test_match_rule_with_proc
+    p = proc { [200, {}, ['Hello, sub-app!']] }
+    rules = @route.match 'sub-app', p
+    assert_equal rules, [{
+                             regexp: /^\/sub-app$/,
+                             vars: [],
+                             dest: p,
+                             options: {
+                                 default: {}
+                             }
+                         }]
+  end
+
+  def test_match_rule_with_controller_action
+    rules = @route.match ':controller/:action/:id'
+    assert_equal rules, [{
+                             regexp: /^\/([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)$/,
+                             vars: %w(controller action id),
+                             dest: nil,
+                             options: {
+                                 default: {}
+                             }
+                         }]
+  end
 
 end

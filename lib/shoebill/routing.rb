@@ -5,8 +5,11 @@ class RouteObject
   end
 
   def match(url, *args)
-    options = extract_options(args)
-    dest = extract_destination(args)
+    options = {}
+    options = args.pop if args[-1].is_a? Hash
+    options[:default] ||= {}
+
+    dest = args.size > 0 ? args.pop : nil
     raise 'Too many args' if args.size > 0
 
     parts = extract_url_parts(url)
@@ -67,7 +70,9 @@ class RouteObject
   end
 
   def extract_destination(*args)
-    args.size > 0 ? args.pop : nil
+    dest = args.size > 0 ? args[0] : nil
+    raise 'Too many args' if args.size > 0
+    dest
   end
 
   def extract_url_parts(url)
