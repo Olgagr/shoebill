@@ -24,7 +24,6 @@ class RouteObject
                     dest: dest,
                     options: options
                 })
-    STDERR.puts @rules
   end
 
   def check_url(url)
