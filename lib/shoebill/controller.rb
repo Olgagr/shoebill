@@ -1,5 +1,4 @@
 require 'erubis'
-require 'shoebill/file_model'
 require 'rack/request'
 
 module Shoebill
