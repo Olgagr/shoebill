@@ -1,9 +1,18 @@
 class RouteObject
 
+  # Initialize @rules array.
   def initialize
     @rules = []
   end
 
+  # Main method to remember routing settings.
+  # * *Returns* :
+  # {
+  #   regexp  : # routing rule translated into regexp
+  #   vars    : # original rules from routing, splitted into array
+  #   dest    : # destination, eg. proc object
+  #   options : # additional options set during routing configuration
+  # }
   def match(url, *args)
     options = {}
     options = args.pop if args[-1].is_a? Hash
@@ -26,6 +35,9 @@ class RouteObject
                 })
   end
 
+  # Match url with remembered routing rule.
+  # * *Returns* :
+  # Proc object
   def check_url(url)
     @rules.each do |r|
       m = r[:regexp].match(url)
@@ -50,6 +62,7 @@ class RouteObject
     nil
   end
 
+  # Helper method. Returns Proc object for RouteObject#check_url method.
   def get_dest(dest, routing_params = {})
     return dest if dest.respond_to?(:call)
     if dest =~ /^([^#]+)#([^#]+)$/
@@ -88,11 +101,22 @@ module Shoebill
 
   class Application
 
+    # Sets routing for application.
+    # === Example
+    #     app.route do
+    #       match '', 'links#index'
+    #       match 'sub-app', proc { [200, {}, ['Hello, sub-app!']] }
+    #       match ':controller/:action/:id'
+    #       match ':controller/:id', :default => {:action => 'show'}
+    #       match ':controller', :default => {:action => 'index'}
+    #       match 'links/find_by', 'links#find_by'
+    #     end
     def route(&block)
       @route_obj ||= RouteObject.new
       @route_obj.instance_eval &block
     end
 
+    # Returns Rack app for url.
     def get_rack_app(env)
       raise 'No routes!' unless @route_obj
       @route_obj.check_url env['PATH_INFO']
