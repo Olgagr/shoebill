@@ -3,6 +3,7 @@ require 'rack/request'
 
 module Shoebill
 
+  # Main controller class.
   class Controller
 
     include Shoebill::Model
@@ -14,6 +15,7 @@ module Shoebill
       @routing_params = {}
     end
 
+    # Returns proper response.
     def dispatch(action, routing_params = {})
       @routing_params = routing_params
       self.send(action)
@@ -26,22 +28,22 @@ module Shoebill
       end
     end
 
+    # Responsible for responding to request.
     def self.action(action, routing_params = {})
       proc { |env| self.new(env).dispatch(action, routing_params) }
     end
 
-    def get_response
-      @response
-    end
-
+    # Renders correct template.
     def render(view_name, status = 200, headers = { 'Content-Type' => 'text/html' }, *args)
       response render_template(view_name, *args), status, headers
     end
 
+    # Returns Rack::Request object.
     def request
       @request ||= Rack::Request.new(env)
     end
 
+    # Returns request params merged with routing params.
     def params
       request.params.merge routing_params
     end
@@ -64,6 +66,10 @@ module Shoebill
     def get_instance_variables
       symbols = self.instance_variables
       Hash[symbols.zip(symbols.map { |sym| self.instance_variable_get sym })]
+    end
+
+    def get_response
+      @response
     end
 
   end
