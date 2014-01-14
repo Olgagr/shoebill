@@ -19,6 +19,69 @@ Or install it yourself as:
 
 ## Usage
 
+### Create your application
+
+Right now, Shoebill does not have any fancy generators. So you have to create application structure by yourself (finally, it's not Ruby on Rails....yet).
+To start out, you have to create main application object. In main directory, create /config directory and application.rb file. Inside the file:
+
+   require 'shoebill'
+
+   $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'app', 'controllers') # this will automatically load all files from app/controllers directory
+
+   module BestLinks # this is a name of your application
+
+       class Application < Shoebill::Application
+       end
+
+   end
+
+### Routing
+
+The Shoebill router recognizes URLs and dispatches them to a controller's action. It's simple and basic.
+
+To start out, you have to describe all our routing rules, for example in config.ru file in your project.
+
+    app = BestLinks::Application.new # instantiate your application main class
+
+    app.route do
+      match '', 'links#index'
+      match 'sub-app', proc { [200, {}, ['Hello, sub-app!']] }
+      match ':controller/:action/:id'
+      match ':controller/:id', :default => {:action => 'show'}
+      match ':controller', :default => {:action => 'index'}
+      match 'links/find_by', 'links#find_by'
+    end
+
+    run app # don't forget to run you app
+
+Any class that inherits from Shoebill::Application has route method. The method takes a block. Inside block you can describe your routing rules.
+Method match takes two arguments. The first one, is URL or URL pattern. The second one can be:
+
+* string - name_of_controller#name_of_action
+* proc object, which should return array with values:
+    1. response status
+    2. response headers
+    3. the body of the response
+* default options, eg. :default => {:action => 'index'}
+
+### Rack middlewares
+
+Shoebill is bases on Rack interface. So you can use in you app any middleware which is available. For example, in config.ru:
+
+    require './config/application'
+
+    app = BestLinks::Application.new
+
+    use Rack::ContentType # this middleware sets the Content-Type header on responses which don't have one.
+
+    app.route do
+        match '', 'links#index'
+    end
+
+    run app
+
+See more: http://rubydoc.info/github/rack/rack/master/Rack
+
 ### Model
 
 Right now Shoebill uses SQLite database as default. It supports basics operations on database.
@@ -69,18 +132,16 @@ Your own class controller should inherit from Shoebill::Controller.
 All instance variables, set in the controller, are available in the view templates. For example:
 
     class MyController < Shoebill::Controller
-
         def show
           @item = MyModel.find(param['id'])
         end
-
     end
 
     # in .html.erb template you can use @item variable
 
     <%= @item %>
 
-# Views
+### Views
 
 All views should be put in views/controller_name (in plural form, without controller prefix) directory. Let's say you have controller *LinksController*. In this situation
 all your views for this controller should be placed in *views/links* directory.
@@ -89,7 +150,6 @@ By default, Shoebill render the view, which has the same name as action in contr
 If you like so, you have to say explicitly, which view should be rendered.
 
     class PostsController
-
         def show
            @post = Post.find 1
            render :post         # this will render view in file post.html.erb
@@ -99,7 +159,6 @@ If you like so, you have to say explicitly, which view should be rendered.
 All instance variable, which are set in controller action, are automatically available in the view.
 
     class PostsController
-
         def show
            @post = Post.find 1
            @author = Author.find 1
