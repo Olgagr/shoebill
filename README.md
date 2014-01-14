@@ -38,7 +38,7 @@ Then you can use the following operations on the database:
     # find model by any attribute
     Post.find_by_title 'Lorem ipsum'
 
-    # save model
+    # update model
     post = Post.find 1
     post.title = 'Some new title'
     post.save
@@ -79,6 +79,35 @@ All instance variables, set in the controller, are available in the view templat
     # in .html.erb template you can use @item variable
 
     <%= @item %>
+
+# Views
+
+All views should be put in views/controller_name (in plural form, without controller prefix) directory. Let's say you have controller *LinksController*. In this situation
+all your views for this controller should be placed in *views/links* directory.
+
+By default, Shoebill render the view, which has the same name as action in controller. You can also render other view for particular action in controller.
+If you like so, you have to say explicitly, which view should be rendered.
+
+    class PostsController
+
+        def show
+           @post = Post.find 1
+           render :post         # this will render view in file post.html.erb
+        end
+    end
+
+All instance variable, which are set in controller action, are automatically available in the view.
+
+    class PostsController
+
+        def show
+           @post = Post.find 1
+           @author = Author.find 1
+        end
+    end
+
+Views in Shoebill, use ERB templating system. See more: http://apidock.com/ruby/ERB
+
 
 
 ## Documentation
