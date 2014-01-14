@@ -24,16 +24,16 @@ Or install it yourself as:
 Right now, Shoebill does not have any fancy generators. So you have to create application structure by yourself (finally, it's not Ruby on Rails....yet).
 To start out, you have to create main application object. In main directory, create /config directory and application.rb file. Inside the file:
 
-   require 'shoebill'
+    require 'shoebill'
 
-   $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'app', 'controllers') # this will automatically load all files from app/controllers directory
+    $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'app', 'controllers') # this will automatically load all files from app/controllers directory
 
-   module BestLinks # this is a name of your application
+    module BestLinks # this is a name of your application
 
-       class Application < Shoebill::Application
-       end
+        class Application < Shoebill::Application
+        end
 
-   end
+    end
 
 ### Routing
 
