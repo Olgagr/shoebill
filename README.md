@@ -3,6 +3,10 @@
 A Rack-based framework, but with extra, custom solutions and magic. Shoebill is MVC framework, with
 views, controllers and models solid structure.
 
+This project was inspired by great book: Rebuilding Rails (http://rebuilding-rails.com/). It was amazing experience to rebuild some
+features we all know and love in Ruby on Rails. It allowed me to better understand how Rails are working and how awesome job
+guys from Core Team did to implement all these features. Thank you, Guys!
+
 ## Installation
 
 Add this line to your application's Gemfile:
