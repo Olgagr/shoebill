@@ -67,6 +67,18 @@ SQL
         self.new Hash[keys.zip vals]
       end
 
+      # Finds all rows for model.
+      # * *Returns* :
+      #   - array of Shoebill::Model::SQLite object
+      def self.all
+        keys = schema.keys
+        sql = "SELECT * FROM #{table}"
+        rows = DB.execute(sql)
+        rows.each_with_object([]) do |r, results|
+          results << self.new(Hash[keys.zip r])
+        end
+      end
+
       # Allows to get and set attribute on model in Rails way.
       # === Example
       #   class Post < SQLite

@@ -99,4 +99,20 @@ SQL
     assert_equal TestModelSQL.count, 0
   end
 
+  def test_all
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    TestModelSQL.create(submitter: 'Anna', link: 'http://google.pl', description: 'Lorem ipsum', posted: 1)
+
+    models = TestModelSQL.all
+    assert_equal models.size, 2
+  end
+
+  def test_all_models_values
+    TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    TestModelSQL.create(submitter: 'Anna', link: 'http://google.pl', description: 'Lorem ipsum', posted: 1)
+
+    models = TestModelSQL.all
+    assert_equal models.first.submitter, 'Olga'
+  end
+
 end
