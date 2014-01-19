@@ -95,11 +95,17 @@ Then you can use the following operations on the database:
     # create new model
     Post.create { title: 'Lorem ipsum', content: 'Lorem lorem' }
 
+    # find all models
+    Post.all
+
     # find model by id
     Post.find 1
 
     # find model by any attribute
     Post.find_by_title 'Lorem ipsum'
+
+    # find model by conditions
+    Post.where(title: 'Lorem ipsum')
 
     # update model
     post = Post.find 1
