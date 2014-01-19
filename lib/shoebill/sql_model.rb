@@ -67,13 +67,29 @@ SQL
         self.new Hash[keys.zip vals]
       end
 
-      # Finds all rows for model.
+      # Finds all models in the database.
       # * *Returns* :
       #   - array of Shoebill::Model::SQLite object
       def self.all
         keys = schema.keys
         sql = "SELECT * FROM #{table}"
         rows = DB.execute(sql)
+        rows.each_with_object([]) do |r, results|
+          results << self.new(Hash[keys.zip r])
+        end
+      end
+
+      # Finds all models in the database by given conditions.
+      # * *Returns* :
+      #   - array of Shoebill::Model::SQLite object
+      def self.where(conditions)
+        keys = schema.keys
+        sql_conditions = conditions.each_with_object([]) do |(k,v), results|
+          results << "#{k} = #{to_sql v}"
+        end.join(' AND ')
+        sql = "SELECT * FROM #{table} WHERE #{sql_conditions}"
+        rows = DB.execute(sql)
+
         rows.each_with_object([]) do |r, results|
           results << self.new(Hash[keys.zip r])
         end

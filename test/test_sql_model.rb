@@ -115,4 +115,11 @@ SQL
     assert_equal models.first.submitter, 'Olga'
   end
 
+  def test_where
+    model_1 = TestModelSQL.create(submitter: 'Olga', link: 'http://google.com', description: 'Lorem ipsum', posted: 1)
+    models = TestModelSQL.where(submitter: 'Olga')
+
+    assert_equal models[0].hash, model_1.hash
+  end
+
 end
