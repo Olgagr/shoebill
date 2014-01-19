@@ -35,9 +35,28 @@ class RouteObject
                 })
   end
 
-  # Match url with remembered routing rule.
-  # * *Returns* :
-  # Proc object
+  private
+
+  def extract_url_parts(url)
+    parts = url.split('/')
+    parts.select! { |p| !p.empty? }
+    parts
+  end
+
+  def combine_regexp(parts, vars)
+    parts.map do |part|
+      if part[0] == ':'
+        vars << part[1..-1]
+        '([a-zA-Z0-9]+)'
+      elsif part[0] == '*'
+        vars << part[1..-1]
+        '(.*)'
+      else
+        part
+      end
+    end
+  end
+
   def check_url(url)
     @rules.each do |r|
       m = r[:regexp].match(url)
@@ -62,7 +81,6 @@ class RouteObject
     nil
   end
 
-  # Helper method. Returns Proc object for RouteObject#check_url method.
   def get_dest(dest, routing_params = {})
     return dest if dest.respond_to?(:call)
     if dest =~ /^([^#]+)#([^#]+)$/
@@ -71,28 +89,6 @@ class RouteObject
       return controller.action($2, routing_params)
     end
     raise "No destination: #{dest.inspect}"
-  end
-
-  private
-
-  def extract_url_parts(url)
-    parts = url.split('/')
-    parts.select! { |p| !p.empty? }
-    parts
-  end
-
-  def combine_regexp(parts, vars)
-    parts.map do |part|
-      if part[0] == ':'
-        vars << part[1..-1]
-        '([a-zA-Z0-9]+)'
-      elsif part[0] == '*'
-        vars << part[1..-1]
-        '(.*)'
-      else
-        part
-      end
-    end
   end
 
 end
